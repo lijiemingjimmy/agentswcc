@@ -9,15 +9,15 @@ import tempfile
 from pathlib import Path
 from typing import Iterable
 
-GENERATOR_REL = ".codex/scripts/sync-from-claude.py"
-SYNC_ENTRY_REL = ".codex/sync.sh"
+GENERATOR_REL = "codex-init/scripts/sync-from-claude.py"
+SYNC_ENTRY_REL = "codex-init/sync.sh"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CODEX_ROOT = REPO_ROOT / ".codex"
 CLAUDE_PLUGIN_ROOT = REPO_ROOT / ".claude-plugin"
 CLAUDE_DOC_PATH = REPO_ROOT / "CLAUDE.md"
 MANIFEST_PATH = CODEX_ROOT / "generated-manifest.json"
 
-MANAGED_SKILLS = ["jicha", "juguo", "xieshang", "zhili", "zhixing"]
+MANAGED_SKILLS = ["jicha", "juguo", "xieshang", "zhengyanshi", "zhiku", "zhili", "zhixing"]
 MANAGED_SHARED_AGENTS = [
     "buwei",
     "dangwei",
@@ -31,7 +31,7 @@ MANAGED_SHARED_AGENTS = [
     "zuopai",
 ]
 INSTALL_COMPONENTS = [*MANAGED_SKILLS, "swcc"]
-SKIPPED_CLAUDE_SKILLS = ["zhengyanshi", "zhiku"]
+SKIPPED_CLAUDE_SKILLS: list[str] = []
 SKIPPED_CLAUDE_AGENTS: list[str] = []
 
 AGENT_MODEL = "gpt-5.4"
@@ -64,6 +64,16 @@ SKILL_OPENAI = {
         "display_name": "协商 / Xieshang",
         "short_description": "Debate options and issue a plan",
         "default_prompt": "Use $xieshang to generate an SWCC consultation plan for this task.",
+    },
+    "zhengyanshi": {
+        "display_name": "政研 / Zhengyanshi",
+        "short_description": "Explore the problem space before planning",
+        "default_prompt": "Use $zhengyanshi to research ambiguities and candidate directions for this task.",
+    },
+    "zhiku": {
+        "display_name": "智库 / Zhiku",
+        "short_description": "On-demand SWCC research",
+        "default_prompt": "Use $zhiku to research docs, options, or best practices for this task.",
     },
     "zhili": {
         "display_name": "治理 / Zhili",
@@ -288,6 +298,7 @@ This repository keeps the editable Claude-side source in `CLAUDE.md` and `.claud
 
 ## User Entry Scripts
 
+- `codex-init/sync.sh` — regenerate managed Codex files under `.codex/`
 - `codex-init/install.sh` — one-step sync + install entrypoint
 - `codex-init/uninstall.sh` — one-step uninstall entrypoint
 
@@ -296,8 +307,9 @@ This repository keeps the editable Claude-side source in `CLAUDE.md` and `.claud
 - `.codex/skills/*` — the {skill_count} user-invocable Codex skills
 - `.codex/skills/swcc/agents/*` — the {agent_count} shared SWCC role prompts
 - `.codex/skills/swcc/scripts/*` — internal install and uninstall helpers
-- `.codex/scripts/sync-from-claude.py` — the generator
 - `.codex/generated-manifest.json` — the managed file manifest
+
+If you open this repository directly in Codex, prefer the committed repo-level skills under `.agents/skills/`. The `codex-init` flow is for installing the managed `.codex/skills/*` set into a global Codex skills directory.
 
 ## One-Step Install
 
@@ -344,14 +356,14 @@ What it does:
 Run from the repository root:
 
 ```bash
-bash .codex/sync.sh
+bash codex-init/sync.sh
 ```
 
 Helpful modes:
 
 ```bash
-bash .codex/sync.sh --dry-run
-bash .codex/sync.sh --check
+bash codex-init/sync.sh --dry-run
+bash codex-init/sync.sh --check
 ```
 
 What it does:
@@ -384,6 +396,7 @@ They support `--target /path/to/codex/skills`, and the install helper links thes
 $zhili 给这个项目加 JWT 认证
 $xieshang 只给我这个功能的实施方案
 $jicha 重点关注安全问题和测试覆盖
+$zhiku 调研这个项目适合哪种 JWT 库
 ```
 
 Expected skill names:
@@ -394,8 +407,9 @@ Expected skill names:
 
 - Source of truth: `CLAUDE.md` and `.claude-plugin/`
 - Managed Codex outputs live only under `.codex/`
+- Repo-local Codex discovery lives under `.agents/skills/`
 - The runtime artifacts still live in `.tmp/swcc/`, just like the Claude version.
-- The Codex adaptation preserves the same five workflow names and all ten shared political-role prompts.
+- The Codex adaptation preserves the same seven workflow names and all ten shared political-role prompts.
 - The orchestration backend is adapted to Codex sub-agents, so the coordinator skill dispatches `agent_prompt`-based role work instead of Claude's `swcc:agent-name` namespace.
 - Project title source: `{heading}`
 """

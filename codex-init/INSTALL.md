@@ -4,16 +4,18 @@ This repository keeps the editable Claude-side source in `CLAUDE.md` and `.claud
 
 ## User Entry Scripts
 
+- `codex-init/sync.sh` — regenerate managed Codex files under `.codex/`
 - `codex-init/install.sh` — one-step sync + install entrypoint
 - `codex-init/uninstall.sh` — one-step uninstall entrypoint
 
 ## Managed Codex Files
 
-- `.codex/skills/*` — the 5 user-invocable Codex skills
+- `.codex/skills/*` — the 7 user-invocable Codex skills
 - `.codex/skills/swcc/agents/*` — the 10 shared SWCC role prompts
 - `.codex/skills/swcc/scripts/*` — internal install and uninstall helpers
-- `.codex/scripts/sync-from-claude.py` — the generator
 - `.codex/generated-manifest.json` — the managed file manifest
+
+If you open this repository directly in Codex, prefer the committed repo-level skills under `.agents/skills/`. The `codex-init` flow is for installing the managed `.codex/skills/*` set into a global Codex skills directory.
 
 ## One-Step Install
 
@@ -60,14 +62,14 @@ What it does:
 Run from the repository root:
 
 ```bash
-bash .codex/sync.sh
+bash codex-init/sync.sh
 ```
 
 Helpful modes:
 
 ```bash
-bash .codex/sync.sh --dry-run
-bash .codex/sync.sh --check
+bash codex-init/sync.sh --dry-run
+bash codex-init/sync.sh --check
 ```
 
 What it does:
@@ -91,6 +93,8 @@ They support `--target /path/to/codex/skills`, and the install helper links thes
 - `jicha`
 - `juguo`
 - `xieshang`
+- `zhengyanshi`
+- `zhiku`
 - `zhili`
 - `zhixing`
 - `swcc`
@@ -105,6 +109,7 @@ They support `--target /path/to/codex/skills`, and the install helper links thes
 $zhili 给这个项目加 JWT 认证
 $xieshang 只给我这个功能的实施方案
 $jicha 重点关注安全问题和测试覆盖
+$zhiku 调研这个项目适合哪种 JWT 库
 ```
 
 Expected skill names:
@@ -112,6 +117,8 @@ Expected skill names:
 - `jicha`
 - `juguo`
 - `xieshang`
+- `zhengyanshi`
+- `zhiku`
 - `zhili`
 - `zhixing`
 
@@ -119,7 +126,8 @@ Expected skill names:
 
 - Source of truth: `CLAUDE.md` and `.claude-plugin/`
 - Managed Codex outputs live only under `.codex/`
+- Repo-local Codex discovery lives under `.agents/skills/`
 - The runtime artifacts still live in `.tmp/swcc/`, just like the Claude version.
-- The Codex adaptation preserves the same five workflow names and all ten shared political-role prompts.
+- The Codex adaptation preserves the same seven workflow names and all ten shared political-role prompts.
 - The orchestration backend is adapted to Codex sub-agents, so the coordinator skill dispatches `agent_prompt`-based role work instead of Claude's `swcc:agent-name` namespace.
 - Project title source: `SWCC — Socialism With Chinese Characteristics (SW Claude Code)`

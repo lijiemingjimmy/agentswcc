@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">🇨🇳 SWCC</h1>
-  <p align="center"><b>Socialism With Chinese Characteristics — SW Claude Code</b></p>
-  <p align="center">民主集中制多智能体编排 Claude Code 插件</p>
+  <p align="center"><b>Socialism With Chinese Characteristics — SW Claude Code / Codex</b></p>
+  <p align="center">民主集中制多智能体编排，支持 Claude Code 插件与 Codex repo-level skills</p>
 </p>
 
 <p align="center">
@@ -10,6 +10,7 @@
   <img src="https://img.shields.io/badge/python-not_needed-green" alt="No Python">
   <img src="https://img.shields.io/badge/dependencies-zero-brightgreen" alt="Zero deps">
   <img src="https://img.shields.io/badge/Claude_Code-plugin-blue" alt="Claude Code Plugin">
+  <img src="https://img.shields.io/badge/Codex-repo__skills-black" alt="Codex Repo Skills">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT">
 </p>
 
@@ -48,15 +49,40 @@
 ## 30 秒体验
 
 ```bash
-# 安装
+# Claude Code 中安装
 /plugins marketplace add ylxmf2005/swcc # In Claude Code
 /plugins install swcc
 
-# 在任意项目中
+# 在 Claude Code 中调用
 /zhili 给这个项目加 JWT 认证
+
+# 在 Codex 中打开本仓库后直接调用
+$zhili 给这个项目加 JWT 认证
 ```
 
 坐好，看戏。
+
+## Codex 直接使用
+
+这个仓库现在同时提供两套入口：
+
+- `.claude-plugin/`：Claude Code 插件源码
+- `.agents/skills/`：Codex 可直接发现的 repo-level skills
+
+在 Codex 中直接打开这个仓库后，可以显式调用以下 7 个 skill：
+
+- `$zhili`
+- `$xieshang`
+- `$zhixing`
+- `$jicha`
+- `$juguo`
+- `$zhengyanshi`
+- `$zhiku`
+
+兼容层规则在 `AGENTS.md` 和 `.agents/swcc-runtime.md`：
+
+- `AGENTS.md` 说明 repo-level skills 入口和 source-of-truth
+- `.agents/swcc-runtime.md` 负责把 Claude 专用的 `swcc:<role>` 调用翻译成 Codex sub-agent 调用
 
 <p align="center">
   <img src="docs/image.png" alt="SWCC 实际运行效果" width="700">
@@ -145,15 +171,17 @@
 
 ## 🛠️ 七大技能
 
+> Claude Code 中使用 `/技能名`；Codex 中使用 `$技能名`。
+
 | 技能 | 说明 | 用法 |
 |------|------|------|
-| `/zhili` | **全流程一条龙** — 从调研到交付 | `/zhili [--scale 小\|中\|大] 任务描述` |
-| `/xieshang` | **只看方案** — 产出计划不动代码 | `/xieshang 任务描述` |
-| `/zhixing` | **直接执行** — 跳过讨论 | `/zhixing [方案]` |
-| `/zhengyanshi` | **前期调研** — 探索问题空间、确认方向 | `/zhengyanshi 任务描述` |
-| `/jicha` | **纪委审查** — review 当前变更 | `/jicha [关注点]` |
-| `/juguo` | **举国体制** — 全力冲刺 | `/juguo 任务描述` |
-| `/zhiku` | **智库调研** — 按需研究任意问题 | `/zhiku 调研问题` |
+| `/zhili` / `$zhili` | **全流程一条龙** — 从调研到交付 | `/zhili` 或 `$zhili [--scale 小\|中\|大] 任务描述` |
+| `/xieshang` / `$xieshang` | **只看方案** — 产出计划不动代码 | `/xieshang` 或 `$xieshang 任务描述` |
+| `/zhixing` / `$zhixing` | **直接执行** — 跳过讨论 | `/zhixing` 或 `$zhixing [方案]` |
+| `/zhengyanshi` / `$zhengyanshi` | **前期调研** — 探索问题空间、确认方向 | `/zhengyanshi` 或 `$zhengyanshi 任务描述` |
+| `/jicha` / `$jicha` | **纪委审查** — review 当前变更 | `/jicha` 或 `$jicha [关注点]` |
+| `/juguo` / `$juguo` | **举国体制** — 全力冲刺 | `/juguo` 或 `$juguo 任务描述` |
+| `/zhiku` / `$zhiku` | **智库调研** — 按需研究任意问题 | `/zhiku` 或 `$zhiku 调研问题` |
 
 > 💡 **每个技能都可以单独使用。** 不一定要走全流程——想调研就 `/zhiku`，想只看方案就 `/xieshang`，想直接干就 `/zhixing`，想 review 就 `/jicha`，想先探索问题就 `/zhengyanshi`。按需组合，灵活使用。
 
